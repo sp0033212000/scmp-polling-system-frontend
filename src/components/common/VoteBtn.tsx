@@ -4,6 +4,7 @@ import classNames from "classnames";
 import { CreateVoteDto } from "@/swagger/swagger.api";
 import { SwaggerAPI } from "@/swagger";
 import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 
 interface VoteBtnProps extends CreateVoteDto {
   color: string;
@@ -25,12 +26,19 @@ const VoteBtn: React.FC<PropsWithChildren<VoteBtnProps>> = ({
   const vote = useCallback(
     () =>
       startVoting(async () => {
-        await SwaggerAPI.voteApi.vote({
-          poll_id,
-          option_id,
-          answer_id,
-        });
-        router.refresh();
+        try {
+          await SwaggerAPI.voteApi.vote({
+            poll_id,
+            option_id,
+            answer_id,
+          });
+          toast.success("Voted successfully");
+          router.refresh();
+        } catch (e) {
+          const message =
+            (e as any).response?.data?.message || "Failed to vote";
+          toast.error(message);
+        }
       }),
     [poll_id, option_id, answer_id, router, startVoting],
   );

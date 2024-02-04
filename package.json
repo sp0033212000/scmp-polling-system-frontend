@@ -22,6 +22,7 @@
     "react-dom": "^18",
     "react-icons": "^5.0.1",
     "react-responsive": "^9.0.2",
+    "react-toastify": "^10.0.4",
     "react-use": "^17.5.0",
     "uniqolor": "^1.1.1"
   },
