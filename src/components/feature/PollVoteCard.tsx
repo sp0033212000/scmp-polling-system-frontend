@@ -1,5 +1,4 @@
 import React from "react";
-import VoteBtn from "@/components/common/VoteBtn";
 import uniqolor from "uniqolor";
 import { ArcElement, Chart as ChartJS, Legend, Tooltip } from "chart.js";
 import { IoChatbubble } from "react-icons/io5";
@@ -7,6 +6,7 @@ import { isSameDay } from "date-fns";
 import { OptionForPollDetail, PollDetailEntity } from "@/swagger/swagger.api";
 import VoteResultDoughnut from "@/components/feature/VoteResultDoughnut";
 import { SwaggerAPI } from "@/swagger";
+import VoteBtnGroup from "@/components/feature/VoteBtnGroup";
 
 type AnswerType = "Single" | "Multi";
 
@@ -67,20 +67,12 @@ const PollVoteCard: React.FC<PollVoteCardProps> = async ({
             </h2>
           )}
           <h2 className={"font-bold text-2xl"}>{title}</h2>
-          <div className={"flex flex-col items-stretch space-y-2 w-fit"}>
-            {serializedAnswer.options?.map((option) => (
-              <VoteBtn
-                key={option.id}
-                color={option.color}
-                poll_id={id}
-                answer_id={answer.id}
-                option_id={option.id}
-                disabled={voted}
-              >
-                {option.label}
-              </VoteBtn>
-            ))}
-          </div>
+          <VoteBtnGroup
+            poll_id={id}
+            answer_id={answer.id}
+            options={serializedAnswer.options}
+            voted={voted}
+          />
         </div>
         <div
           className={

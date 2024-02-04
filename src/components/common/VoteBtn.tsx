@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 interface VoteBtnProps extends CreateVoteDto {
   color: string;
   disabled?: boolean;
+  startVoting: (onVote: () => Promise<void>) => void;
 }
 
 const VoteBtn: React.FC<PropsWithChildren<VoteBtnProps>> = ({
@@ -17,17 +18,22 @@ const VoteBtn: React.FC<PropsWithChildren<VoteBtnProps>> = ({
   option_id,
   answer_id,
   disabled,
+  startVoting,
 }) => {
   const router = useRouter();
 
-  const vote = useCallback(async () => {
-    await SwaggerAPI.voteApi.vote({
-      poll_id,
-      option_id,
-      answer_id,
-    });
-    router.refresh();
-  }, [poll_id, option_id, answer_id, router]);
+  const vote = useCallback(
+    () =>
+      startVoting(async () => {
+        await SwaggerAPI.voteApi.vote({
+          poll_id,
+          option_id,
+          answer_id,
+        });
+        router.refresh();
+      }),
+    [poll_id, option_id, answer_id, router, startVoting],
+  );
 
   return (
     <button
